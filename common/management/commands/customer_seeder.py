@@ -40,18 +40,21 @@ class Command(BaseCommand):
         customers = []
         today = timezone.now().date()
         for _ in range(num_entries):
-            # Generate a date of birth within the next 7 days and age 30
-            dob = today - timedelta(days=randint(30*365, 35*365))
-            # Adjusting the generated date of birth
-            birthday = dob.replace(
-                year=today.year, month=today.month, day=today.day)
+            # Generate a random age between 30 and 35
+            age_days = randint(30*365, 35*365)
+            dob = today - timedelta(days=age_days)
+
+            # Ensure the birthday is within the next 7 days
+            birthday = dob.replace(year=today.year)
             if birthday < today:
                 birthday = birthday.replace(year=today.year + 1)
+
+            # Add customer if birthday is within next 7 days
             if (birthday - today).days <= 7:
                 customers.append(Customer(
                     name=fake.name(),
                     address=fake.sentence(),
                     email=fake.email(),
-                    dob=dob
+                    dob=birthday
                 ))
         return customers

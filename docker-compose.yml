@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  db:
+    image: "postgres:alpine"
+    environment:
+      - POSTGRES_USER=birthday_wisher
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=birthday_wisher
+    ports:
+      - "5433:5432"
+    volumes:
+      - birthday_wisher_database:/var/lib/postgresql/data:delegated
+
+  app:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/home/user/app/
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
+  celery:
+    build: .
+    command: celery -A config worker -l info
+    volumes:
+      - .:/home/user/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A config beat -l info
+    volumes:
+      - .:/home/user/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+volumes:
+  birthday_wisher_database:
+    external: true
