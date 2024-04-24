@@ -148,52 +148,14 @@ REST_FRAMEWORK = {
 }
 # Email
 EMAIL_BACKEND = 'common.custom_email_backend.LoggingEmailBackend'
-
 # Celery
 # Recommended settings for reliability: https://gist.github.com/fjsj/da41321ac96cf28a96235cb20e7236f6
-CELERY_BROKER_URL = config(
-    "RABBITMQ_URL", default="") or config("CELERY_BROKER_URL")
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND")
-CELERY_SEND_TASK_ERROR_EMAILS = True
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TASK_ACKS_LATE = True
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    "confirm_publish": True, "confirm_timeout": 5.0}
-CELERY_BROKER_POOL_LIMIT = config(
-    "CELERY_BROKER_POOL_LIMIT", cast=int, default=1)
-CELERY_BROKER_CONNECTION_TIMEOUT = config(
-    "CELERY_BROKER_CONNECTION_TIMEOUT", cast=float, default=30.0
-)
-CELERY_REDIS_MAX_CONNECTIONS = config(
-    "CELERY_REDIS_MAX_CONNECTIONS", cast=lambda v: int(v) if v else None, default=None
-)
-CELERY_TASK_ACKS_ON_FAILURE_OR_TIMEOUT = config(
-    "CELERY_TASK_ACKS_ON_FAILURE_OR_TIMEOUT", cast=bool, default=True
-)
-CELERY_TASK_REJECT_ON_WORKER_LOST = config(
-    "CELERY_TASK_REJECT_ON_WORKER_LOST", cast=bool, default=False
-)
-CELERY_WORKER_PREFETCH_MULTIPLIER = config(
-    "CELERY_WORKER_PREFETCH_MULTIPLIER", cast=int, default=1)
-CELERY_WORKER_CONCURRENCY = config(
-    "CELERY_WORKER_CONCURRENCY", cast=lambda v: int(v) if v else None, default=None
-)
-CELERY_WORKER_MAX_TASKS_PER_CHILD = config(
-    "CELERY_WORKER_MAX_TASKS_PER_CHILD", cast=int, default=1000
-)
-CELERY_WORKER_SEND_TASK_EVENTS = config(
-    "CELERY_WORKER_SEND_TASK_EVENTS", cast=bool, default=True)
-CELERY_EVENT_QUEUE_EXPIRES = config(
-    "CELERY_EVENT_QUEUE_EXPIRES", cast=float, default=60.0)
-CELERY_EVENT_QUEUE_TTL = config(
-    "CELERY_EVENT_QUEUE_TTL", cast=float, default=5.0)
 CELERY_BEAT_SCHEDULE = {
     "wish_customer_birthday": {
         "task": "customer.tasks.schedule_wish_customer_birthday",
-        "schedule": crontab(hour="*/1"),
+        "schedule":  crontab(hour=config('WISH_AT_HOUR'), minute=config('WISH_AT_MINUTE')),
     },
 }
 
