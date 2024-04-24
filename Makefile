@@ -24,7 +24,7 @@ install_project:
 	@docker-compose run --rm app python manage.py migrate
 	@echo "Creating superuser..."
 	@docker-compose run --rm app python manage.py create_superuser
-	@echo "Do you want to seed authors and books? (yes/no)"
+	@echo "Do you want to seed customer? (yes/no)"
 	@read answer; \
 	if [ "$$answer" = "yes" ]; then \
 		echo "Seeding authors..."; \
@@ -33,10 +33,10 @@ install_project:
 	else \
 		echo "Skipping seeders."; \
 	fi
-
-	@echo "User 'admin' created. Default password is 'admin@bdwisher'"
+	@docker-compose run --rm app python manage.py collectstatic
+	@echo "User 'admin' created. Default password is 'password'"
 	@echo "Service URLs:"
-	@echo "Backend: http://0.0.0.0:8000"
+	@echo "Backend: http://localhost:8000"
 
 
 

@@ -18,9 +18,10 @@
 - Run the project:
   `make docker_up`
 - Run migrations: `make docker_makemigrations && docker_migrate`
+- Collect static: `docker-compose run --rm app python manage.py collectstatic`
 - Run seeders:
 
-  - `make docker_create_superuser` Creates a superuser with the username: _admin_ and password: _password_. Use these credentials to log in to the admin panel, where you can view books, authors, and API endpoints.
+  - `make docker_create_superuser` Creates a superuser with the username: _admin_ and password: _password_. Use these credentials to log in to the admin panel, where you can view customers, and API endpoints.
   - `make docker_seed_customer` Creates 100 Customer
 
 - Access (http://localhost:8000) in your browser; the project should be running there.
@@ -56,3 +57,8 @@ Just run: `make docker_test`
 
 - To check mail send: check celery log by running `make docker_logs celery`
 - You may get log from `report.log` file.
+
+### API Endpoint
+
+- Create customer: `http://localhost:8000/api/v1/customer/register/`
+- Listing customer: `http://localhost:8000/api/v1/customer/`
