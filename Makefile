@@ -6,7 +6,7 @@ ARG := $(word 2, $(MAKECMDGOALS) )
 install_project:
 	@echo "Initializaing project...."
 	@cp config/settings/local.py.example config/settings/local.py
-	@cp .env.example backend/.env
+	@cp .env.example .env
 
 
 	@echo "Project initialized successfully."
@@ -36,7 +36,7 @@ install_project:
 	@docker-compose run --rm app python manage.py collectstatic
 	@echo "User 'admin' created. Default password is 'password'"
 	@echo "Service URLs:"
-	@echo "Backend: http://localhost:8000"
+	@echo "http://localhost:8000"
 
 
 
