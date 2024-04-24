@@ -6,3 +6,4 @@ Faker==24.11.0
 psycopg2==2.9.9
 python-decouple==3.8
 redis==5.0.4
+gunicorn==22.0.0
