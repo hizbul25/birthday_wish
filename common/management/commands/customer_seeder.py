@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from random import randint
 
+from dateutil.relativedelta import relativedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from faker import Faker
@@ -39,22 +40,23 @@ class Command(BaseCommand):
 
         customers = []
         today = timezone.now().date()
+
         for _ in range(num_entries):
-            # Generate a random age between 30 and 35
-            age_days = randint(30*365, 35*365)
-            dob = today - timedelta(days=age_days)
+            dob = fake.date_of_birth(minimum_age=20, maximum_age=50)
 
-            # Ensure the birthday is within the next 7 days
-            birthday = dob.replace(year=today.year)
-            if birthday < today:
-                birthday = birthday.replace(year=today.year + 1)
+            dob_datetime = timezone.datetime.combine(dob, datetime.min.time())
 
-            # Add customer if birthday is within next 7 days
-            if (birthday - today).days <= 7:
+            today_datetime = timezone.datetime.combine(
+                today, datetime.min.time())
+            if (dob_datetime - today_datetime).days < 0:
+                dob_datetime = today_datetime + timedelta(days=randint(0, 5))
+
+            if (dob_datetime.date() - today).days <= 5:
                 customers.append(Customer(
                     name=fake.name(),
-                    address=fake.sentence(),
+                    address=fake.address(),
                     email=fake.email(),
-                    dob=birthday
+                    dob=dob_datetime.date()
                 ))
+
         return customers
