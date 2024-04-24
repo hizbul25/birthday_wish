@@ -27,7 +27,7 @@ install_project:
 	@echo "Do you want to seed customer? (yes/no)"
 	@read answer; \
 	if [ "$$answer" = "yes" ]; then \
-		echo "Seeding authors..."; \
+		echo "Seeding customers..."; \
 		docker-compose run --rm app python manage.py customer_seeder; \
 		echo "Customer seeded successfully."; \
 	else \
