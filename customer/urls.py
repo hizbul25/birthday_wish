@@ -1,11 +1,13 @@
-from django.urls import include, path
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import CustomerViewSet
+from .views import CustomerCreateViewSet, CustomerViewSet
 
 router = DefaultRouter()
-router.register(r'customers', CustomerViewSet, basename='customer')
+
+router.register(r'customer', CustomerViewSet, basename='customer')
 
 urlpatterns = [
-    path('v1/', include(router.urls)),
-]
+    path('customer/register',
+         CustomerCreateViewSet.as_view({'post': 'create'}), name='customer-register'),
+] + router.urls

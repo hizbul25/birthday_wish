@@ -51,7 +51,7 @@ docker_setup:
 
 docker_test:
 	@cp .env.test .env
-	docker-compose run --rm app pytest
+	docker-compose run --rm app python manage.py test customer
 	@cp .env.example .env
 
 
