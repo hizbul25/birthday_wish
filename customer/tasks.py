@@ -3,6 +3,8 @@ from celery.utils.log import get_task_logger
 from django.core.mail import send_mail
 from django.core.management import call_command
 
+from common.helper import convert_to_human_readable
+
 from .models import Customer
 
 logger = get_task_logger(__name__)
@@ -22,7 +24,7 @@ def send_customer_birthday_message(dob):
     try:
         send_mail(subject, message, 'info@bdwisher.com', recipients)
         logger.info(
-            f"\n\nSuccessfully sent birthday email to all customers with dob {dob}.")
+            f"\n\nSuccessfully sent birthday email to all customers DOB: {convert_to_human_readable(dob.day, dob.month)}.")
     except Exception as e:
         logger.error(
-            f"Failed to send birthday email to customers with dob {dob}: {e}")
+            f"Failed to send birthday email to customers with dob {convert_to_human_readable(dob.day, dob.month)}: {e}")
